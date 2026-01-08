@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 优惠券订单服务实现类 - 实现优惠券订单管理相关的具体业务逻辑
+ * 提供优惠券订单的创建、查询、支付等核心功能的具体实现
  * </p>
  *
  * @author 虎哥

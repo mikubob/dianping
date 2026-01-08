@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 商铺服务接口 - 定义商铺管理相关的业务操作方法
+ * 包括商铺的增删改查、缓存处理、地理位置查询等核心业务功能
  * </p>
  *
  * @author 虎哥

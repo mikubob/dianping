@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 用户博客服务实现类 - 实现博客管理相关的具体业务逻辑
+ * 提供博客的增删改查、点赞等核心功能的具体实现
  * </p>
  *
  * @author 虎哥

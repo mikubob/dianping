@@ -32,6 +32,12 @@ public class BlogController {
     @Resource
     private IUserService userService;
 
+    /**
+     * 发布用户博客/探店笔记
+     * 此接口用于让用户发布新的博客内容，自动设置发布用户为当前登录用户
+     * @param blog 包含博客详细内容的数据对象
+     * @return 包含新增博客ID的成功响应结果
+     */
     @PostMapping
     public Result saveBlog(@RequestBody Blog blog) {
         // 获取登录用户
@@ -42,7 +48,6 @@ public class BlogController {
         // 返回id
         return Result.ok(blog.getId());
     }
-
     @PutMapping("/like/{id}")
     public Result likeBlog(@PathVariable("id") Long id) {
         // 修改点赞数量

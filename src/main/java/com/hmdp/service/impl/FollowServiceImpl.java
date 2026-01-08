@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 关注服务实现类 - 实现用户关注相关的具体业务逻辑
+ * 提供用户关注、取消关注、查询关注列表等社交功能的具体实现
  * </p>
  *
  * @author 虎哥

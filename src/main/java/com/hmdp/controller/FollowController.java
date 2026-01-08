@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 关注前端控制器 - 提供用户关注相关的REST API接口
+ * 支持用户之间的相互关注、取消关注、查询关注列表等社交功能
  * </p>
  *
  * @author 虎哥

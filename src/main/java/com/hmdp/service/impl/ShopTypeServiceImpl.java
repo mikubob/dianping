@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 商铺类型服务实现类 - 实现商铺分类管理相关的具体业务逻辑
+ * 提供商铺类型的增删改查等基础功能的具体实现，用于管理系统中的商铺分类信息
  * </p>
  *
  * @author 虎哥

@@ -60,12 +60,23 @@ public class UserController {
         return Result.fail("功能未完成");
     }
 
+    /**
+     * 获取当前登录用户信息
+     * 此接口用于获取当前已登录用户的基本信息
+     * @return 包含当前登录用户信息的结果对象
+     */
     @GetMapping("/me")
     public Result me(){
         // TODO 获取当前登录的用户并返回
         return Result.fail("功能未完成");
     }
 
+    /**
+     * 根据用户ID获取用户详细信息
+     * 此接口用于获取指定用户ID的用户详细资料信息
+     * @param userId 目标用户的唯一标识ID
+     * @return 包含用户详细信息的结果对象
+     */
     @GetMapping("/info/{id}")
     public Result info(@PathVariable("id") Long userId){
         // 查询详情

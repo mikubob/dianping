@@ -13,7 +13,8 @@ import jakarta.annotation.Resource;
 
 /**
  * <p>
- * 前端控制器
+ * 商铺前端控制器 - 提供商铺管理相关的REST API接口
+ * 包含商铺的增删改查、按类型查询、按名称查询等功能
  * </p>
  *
  * @author 虎哥
@@ -27,9 +28,10 @@ public class ShopController {
     public IShopService shopService;
 
     /**
-     * 根据id查询商铺信息
-     * @param id 商铺id
-     * @return 商铺详情数据
+     * 根据商铺ID查询商铺详细信息
+     * 此接口用于获取特定商铺的完整信息，包括名称、地址、经纬度等
+     * @param id 商铺唯一标识ID
+     * @return 包含商铺详细信息的结果对象
      */
     @GetMapping("/{id}")
     public Result queryShopById(@PathVariable("id") Long id) {
@@ -38,8 +40,9 @@ public class ShopController {
 
     /**
      * 新增商铺信息
-     * @param shop 商铺数据
-     * @return 商铺id
+     * 此接口用于向系统中添加新的商铺记录，包括商铺的基本信息
+     * @param shop 包含商铺详细信息的数据对象
+     * @return 包含新增商铺ID的结果对象
      */
     @PostMapping
     public Result saveShop(@RequestBody Shop shop) {
@@ -51,8 +54,9 @@ public class ShopController {
 
     /**
      * 更新商铺信息
-     * @param shop 商铺数据
-     * @return 无
+     * 此接口用于修改已存在的商铺信息，如名称、地址、图片等
+     * @param shop 包含更新后商铺信息的数据对象
+     * @return 成功响应结果
      */
     @PutMapping
     public Result updateShop(@RequestBody Shop shop) {
@@ -63,9 +67,10 @@ public class ShopController {
 
     /**
      * 根据商铺类型分页查询商铺信息
-     * @param typeId 商铺类型
-     * @param current 页码
-     * @return 商铺列表
+     * 此接口用于按商铺类型筛选商铺，并支持分页展示，便于前端按分类浏览
+     * @param typeId 商铺类型ID，用于筛选特定类型的商铺
+     * @param current 当前页码，用于分页查询
+     * @return 包含指定类型商铺列表的结果对象
      */
     @GetMapping("/of/type")
     public Result queryShopByType(
@@ -82,9 +87,10 @@ public class ShopController {
 
     /**
      * 根据商铺名称关键字分页查询商铺信息
-     * @param name 商铺名称关键字
-     * @param current 页码
-     * @return 商铺列表
+     * 此接口提供模糊搜索功能，根据商铺名称中的关键词进行匹配查询
+     * @param name 商铺名称关键字，支持模糊匹配
+     * @param current 当前页码，用于分页查询
+     * @return 包含匹配商铺列表的结果对象
      */
     @GetMapping("/of/name")
     public Result queryShopByName(

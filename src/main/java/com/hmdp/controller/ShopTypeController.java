@@ -25,6 +25,11 @@ public class ShopTypeController {
     @Resource
     private IShopTypeService typeService;
 
+    /**
+     * 查询商铺类型列表
+     * 此接口用于获取所有商铺类型，并按照排序字段升序排列，便于前端展示分类导航
+     * @return 包含所有商铺类型列表的结果对象，按sort字段排序
+     */
     @GetMapping("list")
     public Result queryTypeList() {
         List<ShopType> typeList = typeService

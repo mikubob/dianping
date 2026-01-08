@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/voucher-order")
 public class VoucherOrderController {
+    /**
+     * 秒杀优惠券
+     * 此接口用于处理用户参与优惠券秒杀活动的请求，实现高并发下的秒杀逻辑
+     * @param voucherId 优惠券唯一标识ID
+     * @return 秒杀结果，包含订单信息或错误信息
+     */
     @PostMapping("seckill/{id}")
     public Result seckillVoucher(@PathVariable("id") Long voucherId) {
         return Result.fail("功能未完成");

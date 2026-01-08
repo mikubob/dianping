@@ -24,9 +24,10 @@ public class VoucherController {
     private IVoucherService voucherService;
 
     /**
-     * 新增普通券
-     * @param voucher 优惠券信息
-     * @return 优惠券id
+     * 新增普通优惠券
+     * 此接口用于创建普通类型的优惠券，不包含秒杀相关信息
+     * @param voucher 包含普通优惠券详细信息的数据对象
+     * @return 包含新增优惠券ID的成功响应结果
      */
     @PostMapping
     public Result addVoucher(@RequestBody Voucher voucher) {
@@ -35,9 +36,10 @@ public class VoucherController {
     }
 
     /**
-     * 新增秒杀券
-     * @param voucher 优惠券信息，包含秒杀信息
-     * @return 优惠券id
+     * 新增秒杀优惠券
+     * 此接口用于创建秒杀类型的优惠券，包含特殊的秒杀时间、库存等信息
+     * @param voucher 包含秒杀优惠券详细信息的数据对象
+     * @return 包含新增优惠券ID的成功响应结果
      */
     @PostMapping("seckill")
     public Result addSeckillVoucher(@RequestBody Voucher voucher) {
@@ -46,9 +48,10 @@ public class VoucherController {
     }
 
     /**
-     * 查询店铺的优惠券列表
-     * @param shopId 店铺id
-     * @return 优惠券列表
+     * 查询指定店铺的优惠券列表
+     * 此接口用于获取特定店铺提供的所有优惠券信息，便于用户查看该店铺的优惠活动
+     * @param shopId 目标店铺的唯一标识ID
+     * @return 包含指定店铺所有优惠券列表的结果对象
      */
     @GetMapping("/list/{shopId}")
     public Result queryVoucherOfShop(@PathVariable("shopId") Long shopId) {

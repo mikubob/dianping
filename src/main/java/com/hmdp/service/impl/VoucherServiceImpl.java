@@ -27,6 +27,12 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
     @Resource
     private ISeckillVoucherService seckillVoucherService;
 
+    /**
+     * 查询指定店铺的优惠券列表
+     * 通过Mapper查询指定店铺的所有优惠券信息
+     * @param shopId 目标店铺的唯一标识ID
+     * @return 包含指定店铺所有优惠券列表的结果对象
+     */
     @Override
     public Result queryVoucherOfShop(Long shopId) {
         // 查询优惠券信息
@@ -35,6 +41,11 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
         return Result.ok(vouchers);
     }
 
+    /**
+     * 添加秒杀优惠券
+     * 此方法在一个事务中同时创建普通券和秒杀券的关联信息，确保数据一致性
+     * @param voucher 包含秒杀优惠券详细信息的数据对象
+     */
     @Override
     @Transactional
     public void addSeckillVoucher(Voucher voucher) {
