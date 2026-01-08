@@ -1,0 +1,77 @@
+# ===================================================================
+# 应用基础配置
+# ===================================================================
+server:
+  port: 8081
+
+spring:
+  application:
+    name: hmdp  # 应用名称
+
+  # ===================================================================
+  # 数据源配置（MySQL）
+  # 使用 mysql-connector-j 驱动（Spring Boot 3 默认支持）
+  # ===================================================================
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/hmdp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: 1234
+
+  # ===================================================================
+  # Redis 配置（Spring Boot 3 推荐写法，消除 deprecated 警告）
+  # 使用 spring.data.redis 命名空间
+  # ===================================================================
+  data:
+    redis:
+      # 连接信息（替代旧的 spring.redis.host/port 等）
+      connection:
+        host: localhost
+        port: 6379
+        password: 123456
+        # 如果使用默认数据库 0，可省略；否则指定：
+        # database: 0
+      # Lettuce 客户端连接池配置
+      lettuce:
+        pool:
+          max-active: 10      # 最大活跃连接数
+          max-idle: 10        # 最大空闲连接数
+          min-idle: 1         # 最小空闲连接数
+          time-between-eviction-runs: 10s  # 空闲连接检测间隔
+
+  # ===================================================================
+  # JSON 处理配置（Jackson）
+  # 忽略 null 字段，提升 API 响应整洁度
+  # ===================================================================
+  jackson:
+    default-property-inclusion: non_null  # 只序列化非空字段
+
+# ===================================================================
+# MyBatis-Plus 配置（独立于 spring 命名空间）
+# 注意：MyBatis-Plus 仍使用 mybatis-plus 开头（非 spring.mybatis）
+# ===================================================================
+mybatis-plus:
+  # 实体类别名扫描包
+  type-aliases-package: com.hmdp.entity
+  # Mapper XML 文件位置
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    # 自动将下划线命名的数据库字段映射为驼峰命名的 Java 属性
+    map-underscore-to-camel-case: true
+    # 打印 SQL 日志（可选，调试时开启）
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  # 全局配置（如逻辑删除）
+  global-config:
+    db-config:
+      logic-delete-field: deleted       # 逻辑删除字段名
+      logic-delete-value: 1             # 已删除值
+      logic-not-delete-value: 0         # 未删除值
+
+# ===================================================================
+# 日志配置
+# ===================================================================
+logging:
+  level:
+    com.hmdp: debug        # 业务包日志级别
+    org.springframework.data.redis: info  # Redis 操作日志（可选）
