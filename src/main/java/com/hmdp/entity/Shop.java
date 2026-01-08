@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ * 商铺实体类 - 表示平台上的商户信息
+ * 包含商铺名称、位置、评分、价格、营业时间等详细信息
  * </p>
  *
  * @author 虎哥

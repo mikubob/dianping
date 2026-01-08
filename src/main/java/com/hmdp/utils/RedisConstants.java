@@ -1,5 +1,9 @@
 package com.hmdp.utils;
 
+/**
+ * Redis常量类 - 定义Redis中使用的各种键名常量
+ * 包含登录验证码、用户令牌、缓存、锁、秒杀等各类Redis键的前缀
+ */
 public class RedisConstants {
     public static final String LOGIN_CODE_KEY = "login:code:";
     public static final Long LOGIN_CODE_TTL = 2L;

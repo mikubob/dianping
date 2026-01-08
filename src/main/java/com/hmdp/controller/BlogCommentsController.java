@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 博客评论前端控制器 - 提供博客评论管理相关的REST API接口
+ * 支持评论的发布、查询、回复等社交互动功能
  * </p>
  *
  * @author 虎哥

@@ -17,6 +17,12 @@ import java.util.UUID;
 @RequestMapping("upload")
 public class UploadController {
 
+    /**
+     * 上传博客图片
+     * 此接口用于上传博客相关的图片文件，自动生成唯一的文件名并保存到指定目录
+     * @param image 上传的图片文件
+     * @return 包含上传成功后的文件路径的结果对象
+     */
     @PostMapping("blog")
     public Result uploadImage(@RequestParam("file") MultipartFile image) {
         try {
@@ -34,6 +40,12 @@ public class UploadController {
         }
     }
 
+    /**
+     * 删除博客图片
+     * 此接口用于删除指定名称的博客图片文件
+     * @param filename 要删除的图片文件名
+     * @return 成功或失败的结果
+     */
     @GetMapping("/blog/delete")
     public Result deleteBlogImg(@RequestParam("name") String filename) {
         File file = new File(SystemConstants.IMAGE_UPLOAD_DIR, filename);
@@ -44,6 +56,12 @@ public class UploadController {
         return Result.ok();
     }
 
+    /**
+     * 创建新的文件名
+     * 根据原始文件名生成唯一的文件名，并按哈希值组织目录结构，防止单目录文件过多
+     * @param originalFilename 原始文件名
+     * @return 生成的新文件路径
+     */
     private String createNewFileName(String originalFilename) {
         // 获取后缀
         String suffix = StrUtil.subAfter(originalFilename, ".", true);

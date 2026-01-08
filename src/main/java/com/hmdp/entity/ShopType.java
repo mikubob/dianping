@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ * 商铺类型实体类 - 表示商铺的分类信息
+ * 用于对不同类型的商铺进行分类管理，如美食、KTV、美容等
  * </p>
  *
  * @author 虎哥

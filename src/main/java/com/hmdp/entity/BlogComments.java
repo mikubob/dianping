@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ * 博客评论实体类 - 表示用户对博客的评论信息
+ * 包含评论内容、点赞数、评论层级关系等属性
  * </p>
  *
  * @author 虎哥

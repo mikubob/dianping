@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * 商铺数据访问接口 - 定义商铺数据的持久化操作方法
+ * 提供对商铺表的增删改查等基本操作，继承自MyBatis-Plus的BaseMapper
  * </p>
  *
  * @author 虎哥

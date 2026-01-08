@@ -3,6 +3,8 @@ package com.hmdp.utils;
 import cn.hutool.core.util.StrUtil;
 
 /**
+ * 正则表达式工具类 - 提供基于正则表达式的字符串验证功能
+ * 封装了对手机号、邮箱、验证码等常见格式的验证方法
  * @author 虎哥
  */
 public class RegexUtils {

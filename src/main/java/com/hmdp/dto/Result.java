@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * 通用结果封装类 - 用于统一API响应格式
+ * 包含成功标志、错误消息、数据和总数等信息
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

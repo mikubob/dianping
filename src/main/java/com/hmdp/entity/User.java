@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ * 用户实体类 - 表示平台注册用户的基本信息
+ * 包含用户手机号、密码、昵称、头像等账户信息
  * </p>
  *
  * @author 虎哥

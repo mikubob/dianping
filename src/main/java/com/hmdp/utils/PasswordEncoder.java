@@ -6,6 +6,10 @@ import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * 密码编码器工具类 - 提供安全的密码加密和验证功能
+ * 使用MD5加盐的方式对密码进行加密，防止明文存储密码
+ */
 public class PasswordEncoder {
 
     public static String encode(String password) {

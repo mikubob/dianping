@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- *  服务类
+ * 用户信息服务接口 - 定义用户详细信息管理相关的业务操作方法
+ * 提供用户详细信息的增删改查、个人资料维护等核心功能
  * </p>
  *
  * @author 虎哥

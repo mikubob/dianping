@@ -1,6 +1,8 @@
 package com.hmdp.utils;
 
 /**
+ * 正则表达式模式常量类 - 定义系统中使用的各种正则表达式
+ * 包含手机号、邮箱、密码、验证码等常用验证规则的正则表达式
  * @author 虎哥
  */
 public abstract class RegexPatterns {

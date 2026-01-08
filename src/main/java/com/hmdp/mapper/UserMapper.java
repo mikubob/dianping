@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * 用户数据访问接口 - 定义用户基础数据的持久化操作方法
+ * 提供对用户表的增删改查等基本操作，继承自MyBatis-Plus的BaseMapper
  * </p>
  *
  * @author 虎哥

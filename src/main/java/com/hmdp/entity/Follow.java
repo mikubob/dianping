@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ * 关注实体类 - 表示用户之间的关注关系
+ * 记录用户关注其他用户的社交关系信息
  * </p>
  *
  * @author 虎哥
