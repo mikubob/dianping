@@ -1,7 +1,6 @@
 package com.hmdp.utils;
 
 import com.hmdp.dto.UserDTO;
-import com.hmdp.entity.User;
 
 /**
  * 用户持有者工具类 - 用于在当前线程中存储和获取用户信息
@@ -10,11 +9,7 @@ import com.hmdp.entity.User;
 public class UserHolder {
     private static final ThreadLocal<UserDTO> tl = new ThreadLocal<>();
 
-    public static void saveUser(User user){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setNickName(user.getNickName());
-        userDTO.setIcon(user.getIcon());
+    public static void saveUser(UserDTO userDTO){
         tl.set(userDTO);
     }
 

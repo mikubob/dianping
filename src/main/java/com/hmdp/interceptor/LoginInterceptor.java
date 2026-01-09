@@ -1,6 +1,6 @@
 package com.hmdp.interceptor;
 
-import com.hmdp.entity.User;
+import com.hmdp.dto.UserDTO;
 import com.hmdp.utils.UserHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
         //5.存在，保存用户信息到ThreadLocal
-        UserHolder.saveUser((User) user);
+        UserHolder.saveUser((UserDTO) user);
         //6.放行
         return true;
     }
