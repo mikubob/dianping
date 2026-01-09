@@ -24,13 +24,10 @@ spring:
   # ===================================================================
   data:
     redis:
-      # 连接信息（替代旧的 spring.redis.host/port 等）
-      connection:
-        host: localhost
-        port: 6379
-        password: 123456
-        # 如果使用默认数据库 0，可省略；否则指定：
-        # database: 0
+      host: localhost
+      port: 6379
+      password: 123456
+      database: 2
       # Lettuce 客户端连接池配置
       lettuce:
         pool:
