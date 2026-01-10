@@ -46,13 +46,20 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             return Result.ok(shop);
         }
 
-        //3.不存在，则根据id查询数据库
-        Shop shop = getById(id);
-        if (shop == null) {
-            //4.不存在，则返回错误
+        //3.判断命中是否为空值
+        if (shopJson != null) {
             return Result.fail("店铺不存在");
         }
-        //5.将查询到的数据写入到redis中
+
+        //4.不存在，则根据id查询数据库
+        Shop shop = getById(id);
+        if (shop == null) {
+            //5.将空值写入redis中
+            stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shop), RedisConstants.CACHE_NULL_TTL, TimeUnit.MINUTES);
+            //6.不存在，则返回错误
+            return Result.fail("店铺不存在");
+        }
+        //7.将查询到的数据写入到redis中
         stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shop),RedisConstants.CACHE_SHOP_TTL, TimeUnit.MINUTES);
         return Result.ok(shop);
     }
