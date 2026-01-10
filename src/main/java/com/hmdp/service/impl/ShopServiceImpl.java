@@ -12,6 +12,8 @@ import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * <p>
  * 商铺服务实现类 - 实现商铺管理相关的具体业务逻辑
@@ -51,7 +53,28 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             return Result.fail("店铺不存在");
         }
         //5.将查询到的数据写入到redis中
-        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shop));
+        stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shop),RedisConstants.CACHE_SHOP_TTL, TimeUnit.MINUTES);
         return Result.ok(shop);
+    }
+
+    /**
+     * 更新店铺信息
+     * @param shop
+     * @return
+     */
+    @Override
+    public Result update(Shop shop) {
+        //1.查询店铺id，判断是否存在
+        Long id = shop.getId();
+        if (id==null) {
+            //2.不存在，则返回错误
+            return Result.fail("店铺id不能为空");
+        }
+        //3.存在，则更新数据库
+        updateById(shop);
+        //4.删除缓存
+        stringRedisTemplate.delete(RedisConstants.CACHE_SHOP_KEY+id);
+        //5.返回成功
+        return Result.ok();
     }
 }
