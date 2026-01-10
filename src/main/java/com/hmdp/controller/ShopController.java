@@ -30,17 +30,19 @@ public class ShopController {
     /**
      * 根据商铺ID查询商铺详细信息
      * 此接口用于获取特定商铺的完整信息，包括名称、地址、经纬度等
+     *
      * @param id 商铺唯一标识ID
      * @return 包含商铺详细信息的结果对象
      */
     @GetMapping("/{id}")
     public Result queryShopById(@PathVariable("id") Long id) {
-        return Result.ok(shopService.getById(id));
+        return shopService.queryById(id);
     }
 
     /**
      * 新增商铺信息
      * 此接口用于向系统中添加新的商铺记录，包括商铺的基本信息
+     *
      * @param shop 包含商铺详细信息的数据对象
      * @return 包含新增商铺ID的结果对象
      */
@@ -55,6 +57,7 @@ public class ShopController {
     /**
      * 更新商铺信息
      * 此接口用于修改已存在的商铺信息，如名称、地址、图片等
+     *
      * @param shop 包含更新后商铺信息的数据对象
      * @return 成功响应结果
      */
@@ -68,7 +71,8 @@ public class ShopController {
     /**
      * 根据商铺类型分页查询商铺信息
      * 此接口用于按商铺类型筛选商铺，并支持分页展示，便于前端按分类浏览
-     * @param typeId 商铺类型ID，用于筛选特定类型的商铺
+     *
+     * @param typeId  商铺类型ID，用于筛选特定类型的商铺
      * @param current 当前页码，用于分页查询
      * @return 包含指定类型商铺列表的结果对象
      */
@@ -88,7 +92,8 @@ public class ShopController {
     /**
      * 根据商铺名称关键字分页查询商铺信息
      * 此接口提供模糊搜索功能，根据商铺名称中的关键词进行匹配查询
-     * @param name 商铺名称关键字，支持模糊匹配
+     *
+     * @param name    商铺名称关键字，支持模糊匹配
      * @param current 当前页码，用于分页查询
      * @return 包含匹配商铺列表的结果对象
      */
