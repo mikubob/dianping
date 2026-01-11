@@ -220,7 +220,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     //尝试获取锁
     private boolean tryLock(String key) {
         //在 Redis 中原子地创建一个 10 秒后过期的键，仅当该键不存在时才创建成功，并通过返回值判断是否获取"锁"成功
-        boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.SECONDS);
+        boolean flag = Boolean.TRUE.equals(stringRedisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.SECONDS));
         return BooleanUtil.isTrue(flag);//这么返回当flag为null的时候会返回false
     }
 
