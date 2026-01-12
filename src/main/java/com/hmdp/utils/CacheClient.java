@@ -103,7 +103,7 @@ public class CacheClient {
     /**
      * 缓存重建线程池
      */
-    private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(10);
+    private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(RedisConstants.CACHE_REBUILD_THREAD_POOL_SIZE);
 
     /**
      * 缓存击穿处理(根据id查询数据)
@@ -126,8 +126,14 @@ public class CacheClient {
 
         //2.判断缓存是否命中
         if (StrUtil.isBlank(jsonStr)) {
-            //3.缓存未命中，返回null
-            return null;
+            //3.缓存未命中，查询数据库并设置带逻辑过期的缓存
+            T t = dbFallback.apply(id);
+            if (t == null) {
+                return null;
+            }
+            // 将数据写入Redis并设置逻辑过期时间
+            this.setWithLogicalExpire(key, t, timeout, unit);
+            return t;
         }
 
         //4.缓存命中，先将JSON字符串反序列化为对象
@@ -187,7 +193,7 @@ public class CacheClient {
      * @return 是否释放成功
      */
     private boolean tryLock(String key) {
-        return Boolean.TRUE.equals(stringRedisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.SECONDS));//当flag为null时，说明没有获取锁，返回false
+        return Boolean.TRUE.equals(stringRedisTemplate.opsForValue().setIfAbsent(key, "1", RedisConstants.LOCK_SHOP_TTL, TimeUnit.SECONDS));//当flag为null时，说明没有获取锁，返回false
     }
 
     /**

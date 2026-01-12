@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IShopService {
 
-    private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(10);//创建线程池
+    private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(RedisConstants.CACHE_REBUILD_THREAD_POOL_SIZE);//创建线程池
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
