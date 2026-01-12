@@ -26,4 +26,6 @@ public class RedisConstants {
     public static final String CACHE_SHOP_TYPE_KEY = "cache:shopType:";
 
     public static final int CACHE_REBUILD_THREAD_POOL_SIZE = 10;
+    //SECKILL_VOUCHER_ORDER="order"
+    public static final String SECKILL_VOUCHER_ORDER = "order";
 }
