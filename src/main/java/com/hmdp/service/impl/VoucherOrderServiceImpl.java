@@ -1,6 +1,5 @@
 package com.hmdp.service.impl;
 
-import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.hmdp.dto.Result;
 import com.hmdp.entity.SeckillVoucher;
 import com.hmdp.entity.VoucherOrder;
@@ -12,7 +11,7 @@ import com.hmdp.utils.RedisConstants;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,28 +61,52 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return Result.fail("秒杀券已经抢空");
         }
 
-        //6.秒杀券合法，则秒杀券抢购成功，秒杀券库存减一
+        //6.创建订单
+        Long userId = UserHolder.getUser().getId();
+        synchronized (userId.toString().intern()){
+            //创建代理对象，使用代理对象调用第三方事务方法，避免事务丢失
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(userId, voucherId);
+        }
+    }
+
+    /**
+     * 创建秒杀券订单
+     * @param userId
+     * @param voucherId
+     * @return
+     */
+
+    @Transactional
+    public Result createVoucherOrder(Long userId,Long voucherId) {
+        //1.判断当前用户是否是第一单
+        Long count = query().eq("user_id", userId).eq("voucher_id", voucherId).count();
+        if(count >= 1){
+            //2.当前用户已经使用过该抢购券，无法重复抢购
+            return Result.fail("当前用户已经使用过该抢购券，无法重复抢购");
+        }
+        //3.用户是首次抢购，可以继续抢购，秒杀券库存数量减一
         boolean success = seckillVoucherService.update()
-                .setSql("stock = stock - 1")
-                .eq("voucher_id", voucherId)
-                .ge("stock", 1)
+                .setSql("stock = stock - 1")//对应的sql语句：stock = stock - 1
+                .eq("voucher_id", voucherId)//对应的sql语句：voucher_id = ?
+                /*.ge("stock", 1)//对应的sql语句：stock >= 1*/
+                .gt("stock", 0)
                 .update();
         if(!success){
             //秒杀券抢购失败
-            return Result.fail("秒杀券抢购失败");
+            return Result.fail("秒杀券抢购失败，库存不足！");
         }
-        //7.秒杀成功，创建对应的订单，并保存到数据库
+        //4.秒杀成功，创建对应的订单，并保存到数据库
         VoucherOrder voucherOrder = new VoucherOrder();
-        //7.1.生成订单ID
+        //4.1.生成订单ID
         long orderId = redisIdWorker.nextId(RedisConstants.SECKILL_VOUCHER_ORDER);
         voucherOrder.setId(orderId);
-        //7.2.用户ID
-        Long userId = UserHolder.getUser().getId();
+        //4.2.用户ID
         voucherOrder.setUserId(userId);
-        //7.3.秒杀券ID
+        //4.3.秒杀券ID
         voucherOrder.setVoucherId(voucherId);
         save(voucherOrder);
-        //8.返回订单ID
+        //5.返回订单ID
         return Result.ok(orderId);
     }
 }
