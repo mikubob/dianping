@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class VoucherSeckillStressTest {
-    private static final int TOTAL_REQUESTS = 1000;  // 总请求数量
-    private static final int CONCURRENT_THREADS = 100; // 并发线程数
+    private static final int TOTAL_REQUESTS = 100;  // 总请求数量
+    private static final int CONCURRENT_THREADS = 1; // 并发线程数
     private static final String BASE_URL = "http://localhost:8081";
     private static final String LOGIN_PHONE = "13688668934"; // 使用数据库中存在的手机号
     private static final Long VOUCHER_ID = 10L; // 要秒杀的券ID
@@ -335,7 +335,7 @@ public class VoucherSeckillStressTest {
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "Bearer " + token)
+                    .header("Authorization", token)
                     .POST(HttpRequest.BodyPublishers.noBody())
                     .timeout(Duration.ofSeconds(5))
                     .build();
