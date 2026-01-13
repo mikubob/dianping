@@ -26,7 +26,8 @@ public class SimpleRedisLock implements ILock{
         String threadId = String.valueOf(Thread.currentThread().threadId());
         // 获取锁
         String key = KEY_PREFIX + name;
-        Boolean success = stringRedisTemplate.opsForValue().setIfAbsent(key, threadId, timeoutSec, TimeUnit.SECONDS);
+        Boolean success = stringRedisTemplate.opsForValue().
+                setIfAbsent(key, threadId, timeoutSec, TimeUnit.SECONDS);
         return Boolean.TRUE.equals(success);
     }
 
