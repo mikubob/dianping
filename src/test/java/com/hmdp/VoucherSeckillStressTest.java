@@ -21,7 +21,7 @@ public class VoucherSeckillStressTest {
     private static final String BASE_URL = "http://localhost:8081";
     private static final String LOGIN_PHONE = "13688668934"; // 使用数据库中存在的手机号
     private static final Long VOUCHER_ID = 10L; // 要秒杀的券ID
-    private static final String PROVIDED_TOKEN = "8c42d735109248d995cf531f3d32ded6"; // 用户提供的令牌
+    private static final String PROVIDED_TOKEN = "a9c8ff15ce504086a70aabac7e5c1fc3"; // 用户提供的令牌
     private static final int WARMUP_REQUESTS = 50; // 预热请求数
     
     // 统计类用于收集详细的测试数据

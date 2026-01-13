@@ -25,13 +25,13 @@ public class VoucherOrderValidationTest {
     private static final int TOTAL_REQUESTS_PER_USER = 10;  // 每个用户的请求数量
     private static final int CONCURRENT_THREADS = 10; // 并发线程数（模拟不同用户）
     private static final String BASE_URL = "http://localhost:8081";
-    private static final String BASE_PHONE = "136886689"; // 基础手机号
-    private static final Long VOUCHER_ID = 10L; // 要秒杀的券ID
+    private static final String BASE_PHONE = "13373333337"; // 基础手机号
+    private static final Long VOUCHER_ID = 11L; // 要秒杀的券ID
     private static final int INITIAL_STOCK = 5; // 初始库存，设置一个小值便于测试超卖问题
     private static final int TEST_DURATION_SECONDS = 30; // 测试持续时间（秒）
-    private static final String PROVIDED_TOKEN = "29a5e192cfa14baea4b7e1c2aea9e099"; // 用户提供的令牌
+    private static final String PROVIDED_TOKEN = "6217ac4147064059a2226a7d6b42c8c8"; // 用户提供的令牌
 
-    // 统计类用于收集详细的测试数据
+    // 统计类用于收集详细的测试数据s
     static class Stats {
         AtomicInteger successCount = new AtomicInteger(0);
         AtomicInteger errorCount = new AtomicInteger(0);
