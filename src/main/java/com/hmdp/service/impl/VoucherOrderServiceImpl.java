@@ -103,7 +103,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Transactional
     public Result createVoucherOrder(Long userId, Long voucherId) {
         //1.判断当前用户是否是第一单
-        Long count = query().eq("user_id", userId).eq("voucher_id", voucherId).count();
+        Long count = query().eq("user_id", userId).eq("voucher_id", voucherId).count();//对应的sql语句为：select count(*) from voucher_order where user_id = ? and voucher_id = ?
         if (count >= 1) {
             //2.当前用户已经使用过该抢购券，无法重复抢购
             return Result.fail("当前用户已经使用过该抢购券，无法重复抢购");
