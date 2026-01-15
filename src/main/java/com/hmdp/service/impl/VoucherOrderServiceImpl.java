@@ -15,11 +15,15 @@ import jakarta.annotation.Resource;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileFilter;
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 /**
  * <p>
@@ -42,6 +46,12 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private RedissonClient redissonClient;
 
+    private static final DefaultRedisScript<Long> SECKILL_SCRIPT;
+    static {
+        SECKILL_SCRIPT = new DefaultRedisScript<>();
+        SECKILL_SCRIPT.setLocation(new ClassPathResource("seckill.lua"));
+        SECKILL_SCRIPT.setResultType(Long.class);
+    }
     /**
      * 秒杀优惠券
      *
@@ -52,44 +62,26 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Override
     @Transactional
     public Result seckillVoucher(Long voucherId) {
-        //1. 查询秒杀券
-        SeckillVoucher seckillVoucher = seckillVoucherService.getById(voucherId);
-        //2. 判断秒杀券是否合法
-        if (seckillVoucher.getBeginTime().isAfter(LocalDateTime.now())) {
-            //3.秒杀券抢购尚未开始
-            return Result.fail("秒杀尚未开始");
-        }
-
-        if (seckillVoucher.getEndTime().isBefore(LocalDateTime.now())) {
-            //4.秒杀券抢购已经结束
-            return Result.fail("秒杀已经结束");
-        }
-
-        if (seckillVoucher.getStock() < 1) {
-            //5.秒杀券已经售完
-            return Result.fail("秒杀券已经抢空");
-        }
-
-        //6.创建订单
+        //1.获取当前用户
         Long userId = UserHolder.getUser().getId();
-        //6.1.创建锁对象
-        /*SimpleRedisLock simpleRedisLock = new SimpleRedisLock(stringRedisTemplate, "order:" + voucherId);*/
-        RLock lock = redissonClient.getLock(RedisConstants.LOCK_ORDER_KEY + voucherId);
-
-        //6.2.获取锁
-        boolean isLock = lock.tryLock();
-        if (!isLock) {
-            //6.3.获取锁失败，返回失败结果
-            return Result.fail("不允许重复下单");
+        //2.获取订单id
+        Long orderId = redisIdWorker.nextId(RedisConstants.SECKILL_VOUCHER_ORDER);
+        //3.执行lua脚本
+        Long result = stringRedisTemplate.execute(
+                SECKILL_SCRIPT,
+                Collections.emptyList(),
+                userId.toString(), voucherId.toString(), String.valueOf(orderId)
+        );
+        //4.判断结果是否为0
+        int r= result.intValue();
+        if (r != 0) {
+            //4.1.不为0，说明没有购买资格
+            return Result.fail(r == 1 ? "库存不足" : "不能重复下单");
         }
+        //TODO 保留阻塞队列
 
-        try {
-            // 6.4.获取锁成功，创建代理对象，使用代理对象调用第三方事务方法，防止事务失效
-            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
-            return proxy.createVoucherOrder(userId, voucherId);
-        } finally {
-            lock.unlock();
-        }
+        //5.返回订单id
+        return Result.ok(0);
     }
 
     /**
