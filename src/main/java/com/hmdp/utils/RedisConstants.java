@@ -15,6 +15,7 @@ public class RedisConstants {
     public static final Long CACHE_SHOP_TTL = 30L;
     public static final String CACHE_SHOP_KEY = "cache:shop:";
 
+    public static final String LOCK_ORDER_KEY = "lock:order:";
     public static final String LOCK_SHOP_KEY = "lock:shop:";
     public static final Long LOCK_SHOP_TTL = 10L;
 
@@ -24,9 +25,10 @@ public class RedisConstants {
     public static final String SHOP_GEO_KEY = "shop:geo:";
     public static final String USER_SIGN_KEY = "sign:";
     public static final String CACHE_SHOP_TYPE_KEY = "cache:shopType:";
+    
+    public static final String VOUCHER_OF_SHOP_KEY = "voucher:shop:";
 
     public static final int CACHE_REBUILD_THREAD_POOL_SIZE = 10;
     //SECKILL_VOUCHER_ORDER="order"
     public static final String SECKILL_VOUCHER_ORDER = "order";
-    public static final String LOCK_ORDER_KEY = "order:";
 }

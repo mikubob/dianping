@@ -1,16 +1,14 @@
 package com.hmdp.controller;
 
-
 import com.hmdp.dto.Result;
 import com.hmdp.entity.Voucher;
 import com.hmdp.service.IVoucherService;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author 虎哥
@@ -56,5 +54,17 @@ public class VoucherController {
     @GetMapping("/list/{shopId}")
     public Result queryVoucherOfShop(@PathVariable("shopId") Long shopId) {
        return voucherService.queryVoucherOfShop(shopId);
+    }
+    
+    /**
+     * 删除指定的优惠券
+     * 此接口用于删除指定ID的优惠券及其相关数据
+     * @param id 要删除的优惠券ID
+     * @return 删除操作的结果
+     */
+    @DeleteMapping("/{id}")
+    public Result deleteVoucher(@PathVariable("id") Long id) {
+        voucherService.deleteVoucher(id);
+        return Result.ok();
     }
 }

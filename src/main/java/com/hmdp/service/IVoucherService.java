@@ -28,4 +28,11 @@ public interface IVoucherService extends IService<Voucher> {
      * @param voucher 包含秒杀优惠券详细信息的数据对象
      */
     void addSeckillVoucher(Voucher voucher);
+    
+    /**
+     * 删除优惠券
+     * 此方法用于删除指定ID的优惠券及相关的秒杀券信息
+     * @param voucherId 要删除的优惠券ID
+     */
+    void deleteVoucher(Long voucherId);
 }
