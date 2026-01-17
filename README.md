@@ -186,16 +186,3 @@ java -jar target/hm-dianping-0.0.1-SNAPSHOT.jar
 ```bash
 mvn test
 ```
-
-## 🤝 贡献
-
-欢迎提交Issue和Pull Request来帮助我们改进项目！
-
-## 📄 许可证
-
-[MIT License](LICENSE)
-
-## 📞 联系方式
-
-如有问题，请通过以下方式联系：
-- 提交 Issue: [Issues](https://github.com/your-username/hm-dianping/issues)
