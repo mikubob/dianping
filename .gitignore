@@ -32,5 +32,72 @@ build/
 ### VS Code ###
 .vscode/
 
+### Logs ###
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### OS generated files ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+### Package manager ###
+node_modules/
+jspm_packages/
+bower_components/
+vendor/
+
+### IDE ###
+*.swp
+*.swo
+*~
+*.tmp
+
+### Testing ###
+coverage/
+.nyc_output
+*.lcov
+
+### Database ###
+*.db
+*.db-journal
+
+### Maven wrapper ###
+.mvn/
+
+### Local configuration ###
+local.properties
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+### Spring Boot ###
+*.out
+bin/
+.metadata
+.gradle
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### Sensitive information ###
+config.properties
+application-prod.yaml
+application-secret.yaml
+
 # Ignore embedded git repository
 nginx-1.18.0/html/hmdp/
