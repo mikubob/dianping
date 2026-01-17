@@ -41,6 +41,34 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
     private CacheClient cacheClient;
 
     /**
+     * 同步数据库中的秒杀券库存到Redis
+     * 用于管理员补货或修正库存不一致的情况
+     * @param voucherId 优惠券ID
+     * @return Result 结果
+     */
+    @Override
+    @Transactional
+    public Result syncStockToRedis(Long voucherId) {
+        // 查询数据库中的秒杀券信息
+        SeckillVoucher seckillVoucher = seckillVoucherService.getById(voucherId);
+        if (seckillVoucher == null) {
+            return Result.fail("秒杀券不存在");
+        }
+        
+        // 获取当前数据库中的库存
+        Integer dbStock = seckillVoucher.getStock();
+        
+        // 更新Redis中的库存
+        stringRedisTemplate.opsForValue().set(
+            RedisConstants.SECKILL_STOCK_KEY + voucherId, 
+            dbStock.toString()
+        );
+        
+        log.info("已同步数据库库存到Redis，券ID: {}, 库存: {}", voucherId, dbStock);
+        return Result.ok();
+    }
+
+    /**
      * 查询指定店铺的优惠券列表
      * 通过Mapper查询指定店铺的所有优惠券信息
      * @param shopId 目标店铺的唯一标识ID
@@ -119,7 +147,6 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
      * 删除优惠券并清理相关缓存，防止删除后仍显示乱码
      * @param voucherId 优惠券ID
      */
-    @Override
     @Transactional
     public void deleteVoucher(Long voucherId) {
         log.info("开始删除优惠券，ID: {}", voucherId);

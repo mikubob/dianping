@@ -1,14 +1,18 @@
 package com.hmdp.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.hmdp.dto.Result;
 import com.hmdp.entity.Voucher;
 import com.hmdp.service.IVoucherService;
-import jakarta.annotation.Resource;
+import com.hmdp.service.ISeckillVoucherService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- * 前端控制器
+ * 优惠券发放、核销等前端控制器 - 提供优惠券相关的REST API接口
+ * 包含优惠券的增删改查、秒杀券发布、库存同步等功能
  * </p>
  *
  * @author 虎哥
@@ -16,16 +20,16 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/voucher")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class VoucherController {
 
-    @Resource
-    private IVoucherService voucherService;
+    private final IVoucherService voucherService;
+    private final ISeckillVoucherService seckillVoucherService;
 
     /**
      * 新增普通优惠券
-     * 此接口用于创建普通类型的优惠券，不包含秒杀相关信息
-     * @param voucher 包含普通优惠券详细信息的数据对象
-     * @return 包含新增优惠券ID的成功响应结果
+     * @param voucher 优惠券信息
+     * @return 优惠券ID
      */
     @PostMapping
     public Result addVoucher(@RequestBody Voucher voucher) {
@@ -34,37 +38,34 @@ public class VoucherController {
     }
 
     /**
-     * 新增秒杀优惠券
-     * 此接口用于创建秒杀类型的优惠券，包含特殊的秒杀时间、库存等信息
-     * @param voucher 包含秒杀优惠券详细信息的数据对象
-     * @return 包含新增优惠券ID的成功响应结果
-     */
-    @PostMapping("seckill")
-    public Result addSeckillVoucher(@RequestBody Voucher voucher) {
-        voucherService.addSeckillVoucher(voucher);
-        return Result.ok(voucher.getId());
-    }
-
-    /**
-     * 查询指定店铺的优惠券列表
-     * 此接口用于获取特定店铺提供的所有优惠券信息，便于用户查看该店铺的优惠活动
-     * @param shopId 目标店铺的唯一标识ID
-     * @return 包含指定店铺所有优惠券列表的结果对象
+     * 查询店铺的优惠券列表
+     * @param shopId 店铺ID
+     * @return 优惠券列表
      */
     @GetMapping("/list/{shopId}")
     public Result queryVoucherOfShop(@PathVariable("shopId") Long shopId) {
-       return voucherService.queryVoucherOfShop(shopId);
+        return voucherService.queryVoucherOfShop(shopId);
+    }
+
+    /**
+     * 发布秒杀券
+     * @param voucherVO 秒杀券信息
+     * @return 优惠券ID
+     */
+    @PostMapping("/seckill")
+    public Result addSeckillVoucher(@RequestBody Voucher voucherVO) {
+        voucherService.addSeckillVoucher(voucherVO);
+        return Result.ok(voucherVO.getId());
     }
     
     /**
-     * 删除指定的优惠券
-     * 此接口用于删除指定ID的优惠券及其相关数据
-     * @param id 要删除的优惠券ID
-     * @return 删除操作的结果
+     * 同步数据库库存到Redis
+     * 用于管理员补货或修正库存不一致的情况
+     * @param voucherId 优惠券ID
+     * @return Result 结果
      */
-    @DeleteMapping("/{id}")
-    public Result deleteVoucher(@PathVariable("id") Long id) {
-        voucherService.deleteVoucher(id);
-        return Result.ok();
+    @PutMapping("/sync_stock/{id}")
+    public Result syncStockToRedis(@PathVariable("id") Long voucherId) {
+        return voucherService.syncStockToRedis(voucherId);
     }
 }

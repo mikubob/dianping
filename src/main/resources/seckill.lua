@@ -1,4 +1,3 @@
-
 -- 1.参数列表
 -- 1.1.优惠券id
 local voucherId = ARGV[1]
@@ -16,13 +15,8 @@ local orderKey = 'seckill:order:' .. voucherId
 -- 3.脚本业务
 -- 3.1.判断库存是否充足 get stockKey
 local stock = redis.call('get', stockKey)
-if (stock == false or stock == nil) then
-    -- 3.2.库存不存在，返回1
-    return 1
-end
-local stockNum = tonumber(stock)
-if (stockNum == nil or stockNum <= 0) then
-    -- 3.3.库存不足，返回1
+if (stock == false or stock == nil or tonumber(stock) <= 0) then
+    -- 3.2.库存不足，返回1
     return 1
 end
 -- 3.2.判断用户是否下单 SISMEMBER orderKey userId
