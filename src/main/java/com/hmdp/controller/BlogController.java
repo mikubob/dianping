@@ -13,6 +13,7 @@ import com.hmdp.utils.UserHolder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public class BlogController {
     /**
      * 发布用户博客/探店笔记
      * 此接口用于让用户发布新的博客内容，自动设置发布用户为当前登录用户
+     *
      * @param blog 包含博客详细内容的数据对象
      * @return 包含新增博客ID的成功响应结果
      */
@@ -49,6 +51,7 @@ public class BlogController {
 
     /**
      * 点赞博客
+     *
      * @param id
      * @return
      */
@@ -60,6 +63,7 @@ public class BlogController {
 
     /**
      * 查询当前登录用户的所有博客
+     *
      * @param current
      * @return
      */
@@ -77,6 +81,7 @@ public class BlogController {
 
     /**
      * 查询最热博客
+     *
      * @param current
      * @return
      */
@@ -87,6 +92,7 @@ public class BlogController {
 
     /**
      * 查询博客详情
+     *
      * @param id
      * @return
      */
@@ -97,11 +103,30 @@ public class BlogController {
 
     /**
      * 查询博客点赞数
+     *
      * @param id
      * @return
      */
     @GetMapping("/likes/{id}")
-    public Result queryBlogLikes(@PathVariable("id") Long id){
+    public Result queryBlogLikes(@PathVariable("id") Long id) {
         return blogService.queryBlogLikes(id);
+    }
+
+    /**
+     * 根据id查询博主的探店笔记
+     * @param current
+     * @param id
+     * @return
+     */
+    @GetMapping("/of/user")
+    public Result queryBlogByUserId(@RequestParam(
+            value = "current", defaultValue = "1") Integer current, @RequestParam("id") Long id){
+        // 1.根据用户查询
+        Page<Blog> page = blogService.query()
+                .eq("user_id", id)
+                .page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
+        // 2.获取当前页数据
+        List<Blog> records = page.getRecords();
+        return Result.ok(records);
     }
 }
