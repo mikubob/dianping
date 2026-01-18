@@ -110,7 +110,18 @@ public class BlogController {
      */
     @GetMapping("/of/user")
     public Result queryBlogByUserId(@RequestParam(
-            value = "current", defaultValue = "1") Integer current, @RequestParam("id") Long id){
+            value = "current", defaultValue = "1") Integer current, @RequestParam("id") Long id) {
         return blogService.queryBlogByUserId(current, id);
+    }
+
+    /**
+     * 查询当前用户所关注的博主发布的最新笔记
+     *
+     * @return
+     */
+    @GetMapping("/of/follow")
+    public Result queryBlogOfFollow(@RequestParam(value = "max", defaultValue = "0") Long max,
+                                    @RequestParam(value = "offset", defaultValue = "0") Integer offset){
+        return blogService.queryBlogOfFollow(max, offset);
     }
 }

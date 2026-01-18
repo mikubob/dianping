@@ -62,4 +62,12 @@ public interface IBlogService extends IService<Blog> {
      * @return 指定用户的博客列表
      */
     Result queryBlogByUserId(Integer current, Long id);
+
+    /**
+     * 获取当前登录用户所关注的博主发布的最新博客
+     * @param max
+     * @param offset 
+     * @return
+     */
+    Result queryBlogOfFollow(Long max, Integer offset);
 }
