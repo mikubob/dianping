@@ -35,4 +35,11 @@ public interface IVoucherService extends IService<Voucher> {
      * @return Result 结果
      */
     Result syncStockToRedis(Long voucherId);
+
+    /**
+     * 新增普通优惠券
+     * @param voucher 优惠券信息
+     * @return 优惠券ID
+     */
+    Result addVoucher(Voucher voucher);
 }

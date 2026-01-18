@@ -156,4 +156,62 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         //4.返回
         return Result.ok(userDTOS);
     }
+
+    /**
+     * 保存博客
+     * 此方法用于让用户发布新的博客内容，自动设置发布用户为当前登录用户
+     *
+     * @param blog 博客实体对象，包含博客的详细内容
+     * @return 包含新增博客ID的成功响应结果
+     */
+    @Override
+    public Result saveBlog(Blog blog) {
+        // 获取登录用户
+        UserDTO user = UserHolder.getUser();
+        blog.setUserId(user.getId());
+        // 保存探店博文
+        save(blog);
+        // 返回id
+        return Result.ok(blog.getId());
+    }
+
+    /**
+     * 查询当前登录用户的所有博客
+     * 该方法用于查询当前登录用户发布的所有博客内容
+     *
+     * @param current 当前页码，用于分页查询
+     * @return 包含当前登录用户博客列表的成功响应结果
+     */
+    @Override
+    public Result queryMyBlog(Integer current) {
+        // 获取登录用户
+        UserDTO user = UserHolder.getUser();
+        // 根据用户查询
+        Page<Blog> page = query()
+                .eq("user_id", user.getId()).page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
+        // 获取当前页数据
+        List<Blog> records = page.getRecords();
+        return Result.ok(records);
+    }
+
+    /**
+     * 根据用户ID查询其发布的博客
+     * 该方法用于查询指定用户发布的所有博客内容
+     *
+     * @param current 当前页码，用于分页查询
+     * @param id      用户ID，指定要查询的博主
+     * @return 包含指定用户博客列表的成功响应结果
+     */
+    @Override
+    public Result queryBlogByUserId(Integer current, Long id) {
+        // 1.根据用户查询
+        Page<Blog> page = query()
+                .eq("user_id", id)
+                .page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
+        // 2.获取当前页数据
+        List<Blog> records = page.getRecords();
+        // 3.查询用户信息
+        records.forEach(this::queryBlogUser);
+        return Result.ok(records);
+    }
 }

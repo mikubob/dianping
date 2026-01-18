@@ -40,13 +40,7 @@ public class BlogController {
      */
     @PostMapping
     public Result saveBlog(@RequestBody Blog blog) {
-        // 获取登录用户
-        UserDTO user = UserHolder.getUser();
-        blog.setUserId(user.getId());
-        // 保存探店博文
-        blogService.save(blog);
-        // 返回id
-        return Result.ok(blog.getId());
+        return blogService.saveBlog(blog);
     }
 
     /**
@@ -63,20 +57,14 @@ public class BlogController {
 
     /**
      * 查询当前登录用户的所有博客
+     * 该接口用于查询当前登录用户发布的所有博客内容
      *
-     * @param current
-     * @return
+     * @param current 当前页码，用于分页查询
+     * @return 包含当前登录用户博客列表的成功响应结果
      */
     @GetMapping("/of/me")
     public Result queryMyBlog(@RequestParam(value = "current", defaultValue = "1") Integer current) {
-        // 获取登录用户
-        UserDTO user = UserHolder.getUser();
-        // 根据用户查询
-        Page<Blog> page = blogService.query()
-                .eq("user_id", user.getId()).page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
-        // 获取当前页数据
-        List<Blog> records = page.getRecords();
-        return Result.ok(records);
+        return blogService.queryMyBlog(current);
     }
 
     /**
@@ -114,19 +102,15 @@ public class BlogController {
 
     /**
      * 根据id查询博主的探店笔记
-     * @param current
-     * @param id
-     * @return
+     * 该接口用于查询指定用户发布的所有博客内容
+     *
+     * @param current 当前页码，用于分页查询
+     * @param id      用户ID，指定要查询的博主
+     * @return 包含指定用户博客列表的成功响应结果
      */
     @GetMapping("/of/user")
     public Result queryBlogByUserId(@RequestParam(
             value = "current", defaultValue = "1") Integer current, @RequestParam("id") Long id){
-        // 1.根据用户查询
-        Page<Blog> page = blogService.query()
-                .eq("user_id", id)
-                .page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
-        // 2.获取当前页数据
-        List<Blog> records = page.getRecords();
-        return Result.ok(records);
+        return blogService.queryBlogByUserId(current, id);
     }
 }

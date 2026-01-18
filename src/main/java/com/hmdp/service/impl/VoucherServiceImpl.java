@@ -181,4 +181,10 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
         
         log.info("优惠券删除成功，ID: {}，店铺ID: {}", voucherId, shopId);
     }
+
+    @Override
+    public Result addVoucher(Voucher voucher) {
+        save(voucher);
+        return Result.ok(voucher.getId());
+    }
 }

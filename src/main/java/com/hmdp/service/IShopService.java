@@ -28,4 +28,27 @@ public interface IShopService extends IService<Shop> {
      * @return
      */
     Result update(Shop shop);
+
+    /**
+     * 保存商铺信息
+     * @param shop 包含商铺详细信息的数据对象
+     * @return 包含新增商铺ID的成功响应结果
+     */
+    Result saveShop(Shop shop);
+
+    /**
+     * 根据商铺类型分页查询商铺信息
+     * @param typeId 商铺类型ID，用于筛选特定类型的商铺
+     * @param current 当前页码，用于分页查询
+     * @return 包含指定类型商铺列表的结果对象
+     */
+    Result queryShopByType(Integer typeId, Integer current);
+
+    /**
+     * 根据商铺名称关键字分页查询商铺信息
+     * @param name 商铺名称关键字，支持模糊匹配
+     * @param current 当前页码，用于分页查询
+     * @return 包含匹配商铺列表的结果对象
+     */
+    Result queryShopByName(String name, Integer current);
 }

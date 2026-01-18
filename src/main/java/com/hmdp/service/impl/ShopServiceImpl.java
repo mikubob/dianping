@@ -4,6 +4,7 @@ import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hmdp.dto.Result;
 import com.hmdp.entity.Shop;
 import com.hmdp.mapper.ShopMapper;
@@ -12,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmdp.utils.CacheClient;
 import com.hmdp.utils.RedisConstants;
 import com.hmdp.utils.RedisData;
+import com.hmdp.utils.SystemConstants;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -79,5 +81,54 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         return Result.ok();
     }
 
+    /**
+     * 保存商铺信息
+     * 此方法用于向系统中添加新的商铺记录，包括商铺的基本信息
+     *
+     * @param shop 包含商铺详细信息的数据对象
+     * @return 包含新增商铺ID的成功响应结果
+     */
+    @Override
+    public Result saveShop(Shop shop) {
+        // 写入数据库
+        save(shop);
+        // 返回店铺id
+        return Result.ok(shop.getId());
+    }
 
+    /**
+     * 根据商铺类型分页查询商铺信息
+     * 此方法用于按商铺类型筛选商铺，并支持分页展示，便于前端按分类浏览
+     *
+     * @param typeId  商铺类型ID，用于筛选特定类型的商铺
+     * @param current 当前页码，用于分页查询
+     * @return 包含指定类型商铺列表的结果对象
+     */
+    @Override
+    public Result queryShopByType(Integer typeId, Integer current) {
+        // 根据类型分页查询
+        Page<Shop> page = query()
+                .eq("type_id", typeId)
+                .page(new Page<>(current, SystemConstants.DEFAULT_PAGE_SIZE));
+        // 返回数据
+        return Result.ok(page.getRecords());
+    }
+
+    /**
+     * 根据商铺名称关键字分页查询商铺信息
+     * 此方法提供模糊搜索功能，根据商铺名称中的关键词进行匹配查询
+     *
+     * @param name    商铺名称关键字，支持模糊匹配
+     * @param current 当前页码，用于分页查询
+     * @return 包含匹配商铺列表的结果对象
+     */
+    @Override
+    public Result queryShopByName(String name, Integer current) {
+        // 根据类型分页查询
+        Page<Shop> page = query()
+                .like(StrUtil.isNotBlank(name), "name", name)
+                .page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
+        // 返回数据
+        return Result.ok(page.getRecords());
+    }
 }

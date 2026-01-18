@@ -40,4 +40,26 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     Result queryBlogLikes(Long id);
+
+    /**
+     * 保存博客
+     * @param blog 博客实体
+     * @return 包含新增博客ID的成功响应结果
+     */
+    Result saveBlog(Blog blog);
+
+    /**
+     * 查询当前登录用户的所有博客
+     * @param current 当前页码
+     * @return 用户的博客列表
+     */
+    Result queryMyBlog(Integer current);
+
+    /**
+     * 根据用户ID查询其发布的博客
+     * @param current 当前页码
+     * @param id 用户ID
+     * @return 指定用户的博客列表
+     */
+    Result queryBlogByUserId(Integer current, Long id);
 }
