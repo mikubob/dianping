@@ -11,14 +11,20 @@ import com.hmdp.dto.UserDTO;
 import com.hmdp.entity.User;
 import com.hmdp.mapper.UserMapper;
 import com.hmdp.service.IUserService;
+import com.hmdp.utils.RedisConstants;
 import com.hmdp.utils.RegexUtils;
+import com.hmdp.utils.UserHolder;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.BitFieldSubCommands;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -120,6 +126,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return user;
     }
 
+    /**
+     * 根据id查询用户
+     * @param userId 用户ID
+     * @return
+     */
     @Override
     public Result queryUserById(Long userId) {
         // 查询用户详情
@@ -130,5 +141,49 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
         // 返回
         return Result.ok(userDTO);
+    }
+
+    /**
+     * 签到功能
+     * @return
+     */
+    @Override
+    public Result signCount() {
+        //1.获取当前登录用户
+        Long userId = UserHolder.getUser().getId();
+        //2.获取日期
+        LocalDateTime now = LocalDateTime.now();
+        //3.拼接key
+        String keySuffix = now.format(DateTimeFormatter.ofPattern(":yyyyMM"));
+        String key = USER_SIGN_KEY + userId + keySuffix;
+        //4.获取今天是本月的第几天
+        int dayOfMonth = now.getDayOfMonth();
+        //5.获取本月截止今天为止的所有签到记录，返回一个是十进制的数字，对应的redis操作语句是：BITFIELD sign:5:202203 GET u14 0
+        List<Long> result = stringRedisTemplate.opsForValue().bitField(key,//键
+                BitFieldSubCommands.create()//创建命令
+                        .get(BitFieldSubCommands.BitFieldType.unsigned(dayOfMonth)).valueAt(0));//获取第0个值
+        if (result == null || result.isEmpty()){
+            //没有任何签到结果
+            return Result.ok(0);
+        }
+        Long num = result.getFirst();
+        if (num == null|| num == 0){
+            return Result.ok(0);
+        }
+        //6.循环遍历
+        int count = 0;
+        while (true){
+            //6.1.让这个数字与1做与运算，得到数字的最后一个bit位
+            if ((num & 1) == 0) {
+                //如果结果为0，说明未签到，结束
+                break;
+            }else {
+                //结果为1，说明已签到，计数器+1
+                count++;
+            }
+            //把数字右移一位，相当于把数字除以2
+            num >>>= 1;
+        }
+        return Result.ok(count);
     }
 }

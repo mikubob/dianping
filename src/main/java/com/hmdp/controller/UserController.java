@@ -93,4 +93,13 @@ public class UserController {
     public Result queryUserById(@PathVariable("id") Long userId) {
         return userService.queryUserById(userId);
     }
+
+    /**
+     * 签到功能
+     * @return
+     */
+    @GetMapping("/sign/count")
+    public Result signCount() {
+        return userService.signCount();
+    }
 }
