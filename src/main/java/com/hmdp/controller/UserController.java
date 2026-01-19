@@ -95,11 +95,20 @@ public class UserController {
     }
 
     /**
-     * 签到功能
+     * 统计签到功能
      * @return
      */
     @GetMapping("/sign/count")
     public Result signCount() {
         return userService.signCount();
+    }
+
+    /**
+     * 签到功能
+     * @return
+     */
+    @GetMapping("/sign")
+    public Result sign() {
+        return userService.sign();
     }
 }

@@ -41,8 +41,14 @@ public interface IUserService extends IService<User> {
     Result queryUserById(Long userId);
 
     /**
-     * 签到功能
+     * 统计签到功能
      * @return
      */
     Result signCount();
+
+    /**
+     * 签到功能
+     * @return
+     */
+    Result sign();
 }
