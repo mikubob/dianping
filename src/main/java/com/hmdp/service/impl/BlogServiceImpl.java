@@ -11,7 +11,6 @@ import com.hmdp.entity.ScrollResult;
 import com.hmdp.entity.User;
 import com.hmdp.mapper.BlogMapper;
 import com.hmdp.service.IBlogService;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmdp.service.IFollowService;
 import com.hmdp.service.IUserService;
@@ -22,8 +21,6 @@ import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,7 +77,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
 
     /**
      * 检查博客是否被当前用户点赞
-     * 
+     *
      * @param blog 博客实体
      */
     private void isBlogLiked(Blog blog) {
@@ -91,14 +88,14 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
             return;
         }
         Long userId = user.getId();
-        
+
         // 2. 获取博客ID
         Long blogId = blog.getId();
-        
+
         // 3. 查询Redis中该博客的点赞集合
         String key = RedisConstants.BLOG_LIKED_KEY + blogId;
         Double score = stringRedisTemplate.opsForZSet().score(key, userId.toString());
-        
+
         // 4. 判断是否已点赞
         blog.setIsLike(score != null);
     }
@@ -266,9 +263,10 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
 
     /**
      * 查询当前用户所关注的用户所发布的博客
-     * @param max
-     * @param offset
-     * @return
+     *
+     * @param max    最大时间
+     * @param offset 游标
+     * @return 博客列表
      */
     @Override
     public Result queryBlogOfFollow(Long max, Integer offset) {
@@ -300,13 +298,13 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         }
         os = minTime == max ? os : os + offset;//获取当前页码
         //5.根据id查询blog
-        String idStr = StrUtil.join(",", ids);
-        List<Blog> blogs = query().in("id", ids)
-                .last("ORDER BY FIELD(id," + idStr + ")")
-                .list();
+        String idStr = StrUtil.join(",", ids);//ids转成字符串
+        List<Blog> blogs = query().in("id", ids)//查询指定id的博客
+                .last("ORDER BY FIELD(id," + idStr + ")")//按顺序返回
+                .list();//转成List
         for (Blog blog : blogs) {
             //5.1.查询blog有关的用户
-            queryBlogUser(blog);
+            queryBlogUser(blog);//查询blog有关的用户
             //5.2.查询blog是否被点赞
             isBlogLiked(blog);
         }
